@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>农场画面方案对比</title>
+<script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  :root { --muted-foreground: #6f6a60; }
+  html, body { margin: 0; padding: 0; }
+  body { background: #fbf8f1; color: #33302a; font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; padding: 24px 16px 48px; }
+  .page { max-width: 560px; margin: 0 auto; }
+  h1 { font-size: 18px; font-weight: 500; margin: 0 0 4px; }
+  .lead { font-size: 13px; color: var(--muted-foreground); margin: 0 0 18px; }
+  .tabs { display: flex; gap: 6px; margin-bottom: 14px; }
+  .tabs button { flex: 1; padding: 8px 10px; border-radius: 10px; border: 1px solid #e2dbcb; background: #fff; color: #514c42; font-size: 13px; }
+  .tabs button.is-on { background: #4f7a2f; border-color: #4f7a2f; color: #fff; }
+  .pitch-row { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; font-size: 13px; color: #514c42; }
+  .pitch-row input { flex: 1; }
+  .pitch-row output { min-width: 38px; text-align: right; font-variant-numeric: tabular-nums; }
+  [hidden] { display: none !important; }
+  .viz-dotted-background { background-color: #f7f3ea; background-image: radial-gradient(rgba(0,0,0,0.10) 1px, transparent 1px); background-size: 14px 14px; border-radius: 14px; }
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>农场画面方案对比</h1>
+  <p class="lead">同一个农场场景的三种视角做法。切换下面的标签页对比。</p>
+
+  <div class="tabs" role="tablist" aria-label="视角方案">
+    <button type="button" role="tab" aria-selected="true" data-tab="平面俯视" class="is-on">平面俯视</button>
+    <button type="button" role="tab" aria-selected="false" data-tab="等距斜视">等距斜视</button>
+    <button type="button" role="tab" aria-selected="false" data-tab="低模立体">低模立体</button>
+  </div>
+
+  <div class="pitch-row">
+    <label for="pitch-range">镜头俯角</label>
+    <input type="range" id="pitch-range" min="20" max="50" step="1" value="30">
+    <output id="pitch-out">30°</output>
+  </div>
+
+  <div id="farm-view-root" aria-label="农场画面风格调整">
+    <style>
+      #farm-view-root { --fvp-ink: 1.5px; --fvp-ink-color: #4a3b30; --fvp-sat: 1.05; display: block; }
+      #farm-view-root .fvp-stage { display: flex; justify-content: center; padding: 10px 0 14px; }
+      #farm-view-root .fvp-phone { width: 100%; max-width: 320px; border-radius: 20px; overflow: hidden; background: #f4ecdc; box-shadow: 0 8px 20px rgba(60, 48, 32, 0.14); }
+      #farm-view-root .fvp-hud { display: flex; align-items: center; gap: 8px; padding: 8px 10px; background: #f8f1e1; color: #6f5a40; font-size: 12px; font-weight: 500; }
+      #farm-view-root .fvp-stat { display: inline-flex; align-items: center; gap: 4px; }
+      #farm-view-root .fvp-hud svg { width: 14px; height: 14px; }
+      #farm-view-root .fvp-lv { margin-left: auto; padding: 2px 8px; border-radius: 999px; background: #e7d8bb; color: #6b5233; font-size: 11px; }
+      #farm-view-root .fvp-scene { display: block; background: #cfe4b0; line-height: 0; }
+      #farm-view-root .fvp-scene svg { display: block; width: 100%; height: auto; filter: saturate(var(--fvp-sat)); }
+      #farm-view-root .fvp-scene .sh { stroke: var(--fvp-ink-color); stroke-width: var(--fvp-ink); stroke-linejoin: round; }
+      #farm-view-root .fvp-nav { display: flex; background: #f8f1e1; border-top: 1px solid #e6d9c0; }
+      #farm-view-root .fvp-tab { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 7px 0 8px; background: transparent; border: 0; color: #8b7a60; font-size: 11px; }
+      #farm-view-root .fvp-tab.is-on { color: #4f7a2f; }
+      #farm-view-root .fvp-tab svg { width: 16px; height: 16px; }
+      #farm-view-root .fvp-spec { display: flex; flex-wrap: wrap; gap: 6px 14px; justify-content: center; color: var(--muted-foreground); font-size: 12px; }
+    </style>
+
+    <section data-variant="平面俯视" aria-label="平面俯视">
+      <div class="fvp-stage viz-dotted-background">
+        <div class="fvp-phone">
+          <div class="fvp-hud">
+            <span class="fvp-stat"><i data-lucide="coins" aria-hidden="true"></i>1,240</span>
+            <span class="fvp-stat"><i data-lucide="droplet" aria-hidden="true"></i>18/20</span>
+            <span class="fvp-lv">Lv.3</span>
+          </div>
+          <div class="fvp-scene" data-mode="flat"></div>
+          <div class="fvp-nav">
+            <button type="button" class="fvp-tab is-on"><i data-lucide="leaf" aria-hidden="true"></i>种子</button>
+            <button type="button" class="fvp-tab"><i data-lucide="shopping-cart" aria-hidden="true"></i>商店</button>
+            <button type="button" class="fvp-tab"><i data-lucide="package" aria-hidden="true"></i>仓库</button>
+            <button type="button" class="fvp-tab"><i data-lucide="star" aria-hidden="true"></i>装饰</button>
+          </div>
+        </div>
+      </div>
+      <div class="fvp-spec"><span>视角 90°</span><span>方格 1:1</span><span>无体积</span></div>
+    </section>
+
+    <section data-variant="等距斜视" aria-label="等距斜视" hidden>
+      <div class="fvp-stage viz-dotted-background">
+        <div class="fvp-phone">
+          <div class="fvp-hud">
+            <span class="fvp-stat"><i data-lucide="coins" aria-hidden="true"></i>1,240</span>
+            <span class="fvp-stat"><i data-lucide="droplet" aria-hidden="true"></i>18/20</span>
+            <span class="fvp-lv">Lv.3</span>
+          </div>
+          <div class="fvp-scene" data-mode="iso"></div>
+          <div class="fvp-nav">
+            <button type="button" class="fvp-tab is-on"><i data-lucide="leaf" aria-hidden="true"></i>种子</button>
+            <button type="button" class="fvp-tab"><i data-lucide="shopping-cart" aria-hidden="true"></i>商店</button>
+            <button type="button" class="fvp-tab"><i data-lucide="package" aria-hidden="true"></i>仓库</button>
+            <button type="button" class="fvp-tab"><i data-lucide="star" aria-hidden="true"></i>装饰</button>
+          </div>
+        </div>
+      </div>
+      <div class="fvp-spec"><span class="fvp-pitch">视角 30°</span><span>建筑 3 个面</span><span>体积感中</span></div>
+    </section>
+
+    <section data-variant="低模立体" aria-label="低模立体" hidden>
+      <div class="fvp-stage viz-dotted-background">
+        <div class="fvp-phone">
+          <div class="fvp-hud">
+            <span class="fvp-stat"><i data-lucide="coins" aria-hidden="true"></i>1,240</span>
+            <span class="fvp-stat"><i data-lucide="droplet" aria-hidden="true"></i>18/20</span>
+            <span class="fvp-lv">Lv.3</span>
+          </div>
+          <div class="fvp-scene" data-mode="poly"></div>
+          <div class="fvp-nav">
+            <button type="button" class="fvp-tab is-on"><i data-lucide="leaf" aria-hidden="true"></i>种子</button>
+            <button type="button" class="fvp-tab"><i data-lucide="shopping-cart" aria-hidden="true"></i>商店</button>
+            <button type="button" class="fvp-tab"><i data-lucide="package" aria-hidden="true"></i>仓库</button>
+            <button type="button" class="fvp-tab"><i data-lucide="star" aria-hidden="true"></i>装饰</button>
+          </div>
+        </div>
+      </div>
+      <div class="fvp-spec"><span class="fvp-pitch">视角 30°</span><span>需要投影与光照</span><span>体积感强</span></div>
+    </section>
+
+    <script>
+      (function () {
+        var root = document.getElementById("farm-view-root");
+        if (!root) return;
+
+        var state = { ink: 1.5, sat: 105, pitch: 30 };
+
+        var P = {
+          grassA: "#9dc878", grassB: "#92bd6e",
+          soilA: "#c99c69", soilB: "#bb8d5a",
+          waterA: "#7fbbdd", waterB: "#74afd2",
+          stem: "#4e8f45", leafA: "#6fb75c", leafB: "#5da64c",
+          trunk: "#8a6848",
+          wallL: "#e6d5b8", wallR: "#d2bc99",
+          roofL: "#c4624e", roofR: "#a84e3d",
+          coopL: "#e2cda7", coopR: "#ccb68e",
+          coopRL: "#7fa3c2", coopRR: "#698caa",
+          shadow: "rgba(58, 82, 44, 0.22)",
+          ripple: "rgba(255, 255, 255, 0.45)"
+        };
+
+        function n(v) { return Math.round(v * 10) / 10; }
+        function ptStr(pts) {
+          return pts.map(function (p) { return n(p[0]) + "," + n(p[1]); }).join(" ");
+        }
+        function poly(pts, fill, cls) {
+          return '<polygon points="' + ptStr(pts) + '" fill="' + fill + '"' + (cls ? ' class="' + cls + '"' : "") + "/>";
+        }
+        function rect(x, y, w, h, fill, cls) {
+          return '<rect x="' + n(x) + '" y="' + n(y) + '" width="' + n(w) + '" height="' + n(h) + '" fill="' + fill + '"' + (cls ? ' class="' + cls + '"' : "") + "/>";
+        }
+        function ell(cx, cy, rx, ry, fill, cls) {
+          return '<ellipse cx="' + n(cx) + '" cy="' + n(cy) + '" rx="' + n(rx) + '" ry="' + n(ry) + '" fill="' + fill + '"' + (cls ? ' class="' + cls + '"' : "") + "/>";
+        }
+        function circ(cx, cy, r, fill, cls) {
+          return '<circle cx="' + n(cx) + '" cy="' + n(cy) + '" r="' + n(r) + '" fill="' + fill + '"' + (cls ? ' class="' + cls + '"' : "") + "/>";
+        }
+
+        function groundType(i, j) {
+          if (i >= 4 && j >= 4) return "water";
+          if (i >= 1 && i <= 3 && j >= 1 && j <= 3) return "soil";
+          return "grass";
+        }
+        function groundFill(t, i, j) {
+          var alt = (i + j) % 2 === 0;
+          if (t === "water") return alt ? P.waterA : P.waterB;
+          if (t === "soil") return alt ? P.soilA : P.soilB;
+          return alt ? P.grassA : P.grassB;
+        }
+
+        function defs(mode) {
+          if (mode !== "poly") return "";
+          return "<defs><filter id=\"fvp-soft-poly\" x=\"-60%\" y=\"-60%\" width=\"220%\" height=\"220%\">" +
+            "<feGaussianBlur stdDeviation=\"2.4\"/></filter></defs>";
+        }
+
+        function sproutIso(cx, cy, k, mode) {
+          var s = "";
+          if (mode === "poly") {
+            s += '<ellipse cx="' + n(cx) + '" cy="' + n(cy + 2 * k) + '" rx="' + n(6 * k) + '" ry="' + n(2.8 * k) + '" fill="' + P.shadow + '" filter="url(#fvp-soft-poly)"/>';
+          }
+          s += '<path d="M' + n(cx) + "," + n(cy + 1) + " L" + n(cx) + "," + n(cy - 8 * k) +
+            '" stroke="' + P.stem + '" stroke-width="' + n(1.8 * k) + '" fill="none" stroke-linecap="round"/>';
+          s += '<ellipse cx="' + n(cx - 3.6 * k) + '" cy="' + n(cy - 6.4 * k) + '" rx="' + n(3.6 * k) + '" ry="' + n(2.3 * k) +
+            '" fill="' + P.leafA + '" transform="rotate(-20 ' + n(cx - 3.6 * k) + " " + n(cy - 6.4 * k) + ')"/>';
+          s += '<ellipse cx="' + n(cx + 3.6 * k) + '" cy="' + n(cy - 6.4 * k) + '" rx="' + n(3.6 * k) + '" ry="' + n(2.3 * k) +
+            '" fill="' + P.leafB + '" transform="rotate(20 ' + n(cx + 3.6 * k) + " " + n(cy - 6.4 * k) + ')"/>';
+          return s;
+        }
+
+        function treeIso(cx, cy, k, mode) {
+          var s = "";
+          if (mode === "poly") {
+            s += '<ellipse cx="' + n(cx) + '" cy="' + n(cy + 3 * k) + '" rx="' + n(15 * k) + '" ry="' + n(5.5 * k) + '" fill="' + P.shadow + '" filter="url(#fvp-soft-poly)"/>';
+          }
+          s += poly([[cx, cy - 17 * k], [cx + 6 * k, cy], [cx, cy + 15 * k], [cx - 6 * k, cy]], P.trunk, "sh");
+          s += ell(cx, cy - 24 * k, 15 * k, 12 * k, P.leafB, "sh");
+          s += ell(cx - 6 * k, cy - 32 * k, 12.5 * k, 10 * k, P.leafA, "sh");
+          s += ell(cx + 7 * k, cy - 29 * k, 11 * k, 9 * k, P.leafB, "sh");
+          return s;
+        }
+
+        function boxIso(cx, cy, w, h, wallH, roofH, cols, mode) {
+          var A = [cx, cy - h], B = [cx + w, cy], C = [cx, cy + h], D = [cx - w, cy];
+          var A2 = [A[0], A[1] - wallH], B2 = [B[0], B[1] - wallH];
+          var C2 = [C[0], C[1] - wallH], D2 = [D[0], D[1] - wallH];
+          var apex = [cx, cy - wallH - roofH];
+          var s = "";
+          if (mode === "poly") {
+            s += '<ellipse cx="' + n(cx) + '" cy="' + n(cy + 3) + '" rx="' + n(w * 1.15) + '" ry="' + n(h * 1.1) + '" fill="' + P.shadow + '" filter="url(#fvp-soft-poly)"/>';
+          }
+          s += poly([D, C, C2, D2], cols.left, "sh");
+          s += poly([B, C, C2, B2], cols.right, "sh");
+          s += poly([A2, B2, apex], cols.roofBack, "sh");
+          s += poly([A2, D2, apex], cols.roofBack, "sh");
+          s += poly([B2, C2, apex], cols.roofRight, "sh");
+          s += poly([D2, C2, apex], cols.roofLeft, "sh");
+          return s;
+        }
+
+        function buildFlat() {
+          var out = [], x0 = 33, y0 = 13, C = 42;
+          out.push(rect(0, 0, 360, 320, "#a8cf84"));
+          for (var j = 0; j < 7; j++) {
+            for (var i = 0; i < 7; i++) {
+              out.push(rect(x0 + i * C, y0 + j * C, C, C, groundFill(groundType(i, j), i, j), "sh"));
+            }
+          }
+          out.push(ell(x0 + 5.5 * C, y0 + 5.5 * C, 40, 36, P.ripple));
+          for (var k = 0; k < 3; k++) {
+            var tx = [0, 2, 5][k], ty = [0, 0, 2][k];
+            var cx = x0 + tx * C + C / 2, cy = y0 + ty * C + C / 2;
+            out.push(circ(cx + 3, cy + 4, 17, P.leafB, "sh"));
+            out.push(circ(cx - 2, cy - 2, 14, P.leafA, "sh"));
+          }
+          for (var i2 = 1; i2 <= 3; i2++) {
+            for (var j2 = 1; j2 <= 3; j2++) {
+              var sx = x0 + i2 * C + C / 2, sy = y0 + j2 * C + C / 2;
+              out.push(circ(sx - 6, sy - 5, 7, P.leafA, "sh"));
+              out.push(circ(sx + 6, sy + 4, 7, P.leafB, "sh"));
+              out.push(circ(sx + 5, sy - 9, 5.5, P.leafA, "sh"));
+            }
+          }
+          out.push(rect(x0, y0 + 5 * C, 2 * C, 2 * C, P.roofL, "sh"));
+          out.push(rect(x0, y0 + 5 * C, 2 * C, C, P.roofR, "sh"));
+          out.push(rect(x0 + C * 0.75, y0 + 6.5 * C, C * 0.5, C * 0.5, P.wallL, "sh"));
+          out.push(rect(x0 + 5 * C, y0, 2 * C, C, P.coopRL, "sh"));
+          out.push(rect(x0 + 5 * C, y0 + C * 0.6, 2 * C, C * 0.4, P.coopRR, "sh"));
+          return { defs: "", body: out.join("") };
+        }
+
+        function buildIso(mode) {
+          var TW = 48;
+          var TH = TW * Math.sin(state.pitch * Math.PI / 180);
+          var OX = 180, OY = 185 - 3 * TH;
+          var k = TW / 42;
+          var out = [], objs = [];
+
+          function c(i, j) { return [OX + (i - j) * TW / 2, OY + (i + j) * TH / 2]; }
+          function d(i, j) {
+            var p = c(i, j);
+            return [[p[0], p[1] - TH / 2], [p[0] + TW / 2, p[1]], [p[0], p[1] + TH / 2], [p[0] - TW / 2, p[1]]];
+          }
+
+          out.push(rect(0, 0, 360, 320, "#a8cf84"));
+          for (var s = 0; s <= 12; s++) {
+            for (var i = 0; i <= 6; i++) {
+              var j = s - i;
+              if (j < 0 || j > 6) continue;
+              out.push(poly(d(i, j), groundFill(groundType(i, j), i, j), "sh"));
+            }
+          }
+          out.push(ell(OX, OY + 5 * TH, 36 * k, 16 * k, P.ripple));
+
+          for (var ci = 1; ci <= 3; ci++) {
+            for (var cj = 1; cj <= 3; cj++) {
+              var cp = c(ci, cj);
+              objs.push({ depth: ci + cj + 0.3, html: sproutIso(cp[0], cp[1], 1.15 * k, mode) });
+            }
+          }
+
+          [[0, 0], [2, 0], [5, 2]].forEach(function (t) {
+            var tp = c(t[0], t[1]);
+            objs.push({ depth: t[0] + t[1] + 0.4, html: treeIso(tp[0], tp[1], k, mode) });
+          });
+
+          var q = c(5.5, 0);
+          objs.push({
+            depth: 5.6,
+            html: boxIso(q[0], q[1] + 4, 28 * k, 14 * k, 16 * k, 12 * k, {
+              left: P.coopL, right: P.coopR, roofLeft: P.coopRL, roofRight: P.coopRR, roofBack: P.coopRR
+            }, mode)
+          });
+
+          var hp = c(0.5, 5.5);
+          objs.push({
+            depth: 6.4,
+            html: boxIso(hp[0], hp[1] + 6, 38 * k, 19 * k, 28 * k, 20 * k, {
+              left: P.wallL, right: P.wallR, roofLeft: P.roofL, roofRight: P.roofR, roofBack: P.roofR
+            }, mode)
+          });
+
+          objs.sort(function (a, b) { return a.depth - b.depth; });
+          objs.forEach(function (o) { out.push(o.html); });
+
+          return { defs: defs(mode), body: out.join("") };
+        }
+
+        function renderScenes() {
+          root.style.setProperty("--fvp-ink", state.ink + "px");
+          root.style.setProperty("--fvp-sat", String(state.sat / 100));
+
+          var labels = root.querySelectorAll(".fvp-pitch");
+          for (var li = 0; li < labels.length; li++) {
+            labels[li].textContent = "视角 " + Math.round(state.pitch) + "°";
+          }
+
+          var nodes = root.querySelectorAll(".fvp-scene");
+          for (var idx = 0; idx < nodes.length; idx++) {
+            var el = nodes[idx];
+            var mode = el.getAttribute("data-mode");
+            var key = mode === "flat" ? "flat" : "pitch:" + state.pitch;
+            if (el.getAttribute("data-key") !== key) {
+              var scene = mode === "flat" ? buildFlat() : buildIso(mode);
+              el.innerHTML = '<svg viewBox="0 0 360 320" role="img" aria-label="农场场景示意图：' + mode +
+                '" preserveAspectRatio="xMidYMid meet">' + scene.defs + scene.body + "</svg>";
+              el.setAttribute("data-key", key);
+            }
+          }
+        }
+
+        renderScenes();
+
+        window.__farmPitch = function (v) {
+          state.pitch = Number(v);
+          renderScenes();
+        };
+      })();
+
+      (function () {
+        var root = document.getElementById("farm-view-root");
+        var tabs = document.querySelectorAll(".tabs button");
+        var sections = root.querySelectorAll("section[data-variant]");
+        for (var i = 0; i < tabs.length; i++) {
+          tabs[i].addEventListener("click", function () {
+            var name = this.getAttribute("data-tab");
+            for (var a = 0; a < tabs.length; a++) {
+              var on = tabs[a] === this;
+              tabs[a].classList.toggle("is-on", on);
+              tabs[a].setAttribute("aria-selected", on ? "true" : "false");
+            }
+            for (var b = 0; b < sections.length; b++) {
+              sections[b].hidden = sections[b].getAttribute("data-variant") !== name;
+            }
+          });
+        }
+        if (window.lucide) { window.lucide.createIcons(); }
+
+        var range = document.getElementById("pitch-range");
+        var out = document.getElementById("pitch-out");
+        if (range && window.__farmPitch) {
+          range.addEventListener("input", function () {
+            window.__farmPitch(this.value);
+            if (out) { out.textContent = this.value + "°"; }
+          });
+        }
+      })();
+    </script>
+  </div>
+</div>
+</body>
+</html>
