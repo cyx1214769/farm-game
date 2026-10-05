@@ -1,0 +1,24 @@
+# ============ Cocos Creator 生成的大文件（不要传上去）============
+# 这些加起来 160 多 MB，都是可以重新生成的，传上去又慢又没意义
+FarmGame/build/
+FarmGame/library/
+FarmGame/temp/
+FarmGame/profiles/
+FarmGame/local/
+FarmGame/native/
+FarmGame/node_modules/
+
+# ============ 本地的代码快照（git 本身就是备份，不用传）============
+backup/
+
+# ============ 下载的素材原包（约 21MB）============
+# 真正用到的图已经复制进 FarmGame/assets/resources/art/ 了，这里只是挑素材时的原始包
+_asset_downloads/
+
+# ============ 编辑器 ============
+.vscode/
+.idea/
+
+# ============ 系统 ============
+Thumbs.db
+Desktop.ini
